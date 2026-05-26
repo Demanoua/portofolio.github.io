@@ -1,651 +1,2348 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Ads Studio | Scroll-Stopping Video Ads</title>
-    <meta name="description" content="High-converting video ads for TikTok, Instagram & YouTube. Hook viewers in 3 seconds. Drive sales.">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        void: '#09090a',
-                        crimson: '#e03000',
-                        ivory: '#f4f4f5',
-                        lime: '#ccff00',
-                        stone: '#8a8a93',
-                        surface: '#121214',
-                    },
-                    fontFamily: {
-                        display: ['Inter', 'sans-serif'],
-                        body: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                }
-            }
-        }
-    </script>
-    
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    
-    <!-- Lenis Smooth Scroll -->
-    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-    
-    <!-- Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="bg-void text-ivory font-body overflow-x-hidden">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinetica — Video Ads Specialist</title>
+  <meta name="description" content="High-converting video ads for TikTok, Meta, and e-commerce. Scroll-stopping creatives that drive sales.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- GSAP + ScrollTrigger + Lenis -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 
-    <!-- ===================== FILM GATE OVERLAY ===================== -->
-    <div class="gate-overlay" id="gateOverlay">
-        <div class="gate-panel gate-panel-tl"></div>
-        <div class="gate-panel gate-panel-tr"></div>
-        <div class="gate-panel gate-panel-bl"></div>
-        <div class="gate-panel gate-panel-br"></div>
+  <style>
+    /* ============================================
+       CSS VARIABLES & RESET
+    ============================================ */
+    :root {
+      --bg: #0A0908;
+      --surface: #121212;
+      --white: #F7F7F7;
+      --violet: #A288E3;
+      --violet-light: #B39DED;
+      --pink: #F72585;
+      --text-secondary: rgba(247, 247, 247, 0.7);
+      --text-muted: rgba(247, 247, 247, 0.5);
+      --border-subtle: rgba(247, 247, 247, 0.08);
+
+      /* Fluid type scale */
+      --fluid: calc(100vw - 320px) / 1600;
+      --h1: clamp(48px, calc(48px + 80 * var(--fluid)), 128px);
+      --h2: clamp(42px, calc(42px + 60 * var(--fluid)), 102px);
+      --h3: clamp(36px, calc(36px + 46 * var(--fluid)), 82px);
+      --h4: clamp(28px, calc(28px + 20 * var(--fluid)), 48px);
+      --h5: clamp(24px, calc(24px + 12 * var(--fluid)), 36px);
+      --body-lg: clamp(18px, calc(18px + 6 * var(--fluid)), 24px);
+      --body: clamp(16px, calc(16px + 4 * var(--fluid)), 20px);
+      --label: clamp(12px, calc(12px + 2 * var(--fluid)), 14px);
+      --nav-label: clamp(11px, calc(11px + 1 * var(--fluid)), 12px);
+
+      /* Spacing */
+      --section-pad-y: clamp(80px, calc(80px + 80 * var(--fluid)), 160px);
+      --section-pad-x: clamp(20px, calc(20px + 60 * var(--fluid)), 80px);
+      --content-max: 1440px;
+
+      /* Easings */
+      --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    html.lenis, html.lenis body {
+      height: auto;
+    }
+
+    .lenis.lenis-smooth {
+      scroll-behavior: auto !important;
+    }
+
+    .lenis.lenis-smooth [data-lenis-prevent] {
+      overscroll-behavior: contain;
+    }
+
+    .lenis.lenis-stopped {
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 400;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+    }
+
+    /* ============================================
+       TYPOGRAPHY
+    ============================================ */
+    .font-heading {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--h2);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--h3);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .h4 {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--h4);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .h5 {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--h5);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .body-lg {
+      font-family: 'Archivo', sans-serif;
+      font-size: var(--body-lg);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .body {
+      font-family: 'Archivo', sans-serif;
+      font-size: var(--body);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .label {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--label);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--violet);
+    }
+
+    .nav-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: var(--nav-label);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ============================================
+       SHARED COMPONENTS
+    ============================================ */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--violet);
+      color: var(--bg);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 16px 32px;
+      border-radius: 8px;
+      transition: all 0.3s var(--ease-out-quart);
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--violet-light);
+      transform: scale(1.02);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--violet);
+      color: var(--violet);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: 8px;
+      transition: all 0.3s var(--ease-out-quart);
+      cursor: pointer;
+    }
+
+    .btn-outline:hover {
+      background: var(--violet);
+      color: var(--bg);
+    }
+
+    .section-label {
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    /* Pill tag */
+    .tag {
+      display: inline-block;
+      background: rgba(162, 136, 227, 0.15);
+      color: var(--violet);
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* Content container */
+    .container {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 var(--section-pad-x);
+    }
+
+    /* ============================================
+       HEADER
+    ============================================ */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      padding: 20px var(--section-pad-x);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(10, 9, 8, 0.9);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo svg {
+      height: 28px;
+      width: auto;
+    }
+
+    /* ============================================
+       SIDEBAR NAV (Desktop)
+    ============================================ */
+    .sidebar-nav {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 50;
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .sidebar-nav-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--violet);
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all 0.3s var(--ease-out-quart);
+      white-space: nowrap;
+    }
+
+    .sidebar-nav-item:hover .sidebar-nav-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .sidebar-nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(247, 247, 247, 0.5);
+      transition: all 0.3s var(--ease-out-quart);
+      flex-shrink: 0;
+    }
+
+    .sidebar-nav-item.active .sidebar-nav-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--violet);
+      border-color: var(--violet);
+    }
+
+    /* ============================================
+       MOBILE NAV
+    ============================================ */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: rgba(10, 9, 8, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .mobile-nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(247, 247, 247, 0.4);
+      transition: all 0.3s var(--ease-out-quart);
+    }
+
+    .mobile-nav-item.active .mobile-nav-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--violet);
+      border-color: var(--violet);
+    }
+
+    .mobile-nav-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+
+    .mobile-nav-item.active .mobile-nav-label {
+      color: var(--violet);
+    }
+
+    /* ============================================
+       HERO SECTION
+    ============================================ */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 30% 50%, rgba(162, 136, 227, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* 3D Text Cylinder */
+    .cylinder-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1200px;
+      height: 280px;
+      perspective: 1200px;
+      z-index: 0;
+      opacity: 0.15;
+    }
+
+    .cylinder {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: cylinderRotate 40s linear infinite;
+    }
+
+    .cylinder-face {
+      position: absolute;
+      width: 1200px;
+      height: 280px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      place-items: center;
+      backface-visibility: hidden;
+    }
+
+    .cylinder-face span {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 5vw, 72px);
+      text-transform: uppercase;
+      color: var(--white);
+      white-space: nowrap;
+      padding: 0 20px;
+    }
+
+    /* 6 faces of a hexagonal prism */
+    .cylinder-face:nth-child(1) { transform: rotateX(0deg) translateZ(242px); }
+    .cylinder-face:nth-child(2) { transform: rotateX(60deg) translateZ(242px); }
+    .cylinder-face:nth-child(3) { transform: rotateX(120deg) translateZ(242px); }
+    .cylinder-face:nth-child(4) { transform: rotateX(180deg) translateZ(242px); }
+    .cylinder-face:nth-child(5) { transform: rotateX(240deg) translateZ(242px); }
+    .cylinder-face:nth-child(6) { transform: rotateX(300deg) translateZ(242px); }
+
+    @keyframes cylinderRotate {
+      0% { transform: rotateX(0deg) rotateY(-15deg); }
+      50% { transform: rotateX(180deg) rotateY(15deg); }
+      100% { transform: rotateX(360deg) rotateY(-15deg); }
+    }
+
+    /* Hero Content */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 var(--section-pad-x);
+    }
+
+    .hero-label {
+      margin-bottom: 24px;
+    }
+
+    .hero-headline {
+      margin-bottom: 16px;
+    }
+
+    .hero-headline .line {
+      display: block;
+    }
+
+    .hero-subtitle {
+      color: rgba(247, 247, 247, 0.9);
+      margin-bottom: 24px;
+    }
+
+    .hero-desc {
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto 32px;
+    }
+
+    .hero-cta {
+      margin-bottom: 60px;
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .scroll-indicator svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--text-muted);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ============================================
+       PROJECTS SECTION
+    ============================================ */
+    .projects {
+      position: relative;
+      background: var(--bg);
+      padding: var(--section-pad-y) 0;
+    }
+
+    .projects-layout {
+      display: flex;
+      gap: 40px;
+    }
+
+    .projects-sidebar {
+      width: 35%;
+      max-width: 420px;
+      flex-shrink: 0;
+    }
+
+    .projects-sidebar-inner {
+      position: sticky;
+      top: 120px;
+    }
+
+    .projects-sidebar .section-label {
+      margin-bottom: 16px;
+    }
+
+    .projects-sidebar h2 {
+      margin-bottom: 16px;
+    }
+
+    .projects-sidebar .role {
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .projects-sidebar .desc {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .projects-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+    }
+
+    /* Project Card */
+    .project-card {
+      cursor: pointer;
+    }
+
+    .project-card-video {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .project-card-video img,
+    .project-card-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s var(--ease-out-quart);
+    }
+
+    .project-card:hover .project-card-video img,
+    .project-card:hover .project-card-video video {
+      transform: scale(1.02);
+    }
+
+    .project-card-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(247, 37, 133, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s var(--ease-out-quart);
+      z-index: 2;
+    }
+
+    .project-card-play svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--white);
+      margin-left: 4px;
+    }
+
+    .project-card:hover .project-card-play {
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0.5;
+    }
+
+    .project-card-info {
+      margin-top: 20px;
+    }
+
+    .project-card-info h4 {
+      margin-bottom: 8px;
+    }
+
+    .project-card-info p {
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .project-card-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================
+       EXPERTISE SECTION
+    ============================================ */
+    .expertise {
+      position: relative;
+      background: var(--bg);
+      padding: var(--section-pad-y) 0;
+    }
+
+    .expertise-card {
+      background: var(--surface);
+      border-radius: 16px;
+      margin: 0 var(--section-pad-x);
+      padding: clamp(40px, 5vw, 80px);
+      overflow: hidden;
+    }
+
+    .expertise-header {
+      margin-bottom: 60px;
+    }
+
+    .expertise-scroll-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .expertise-scroll {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      will-change: transform;
+    }
+
+    .expertise-item {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(32px, 5vw, 72px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--white);
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      cursor: default;
+      flex-shrink: 0;
+    }
+
+    .expertise-item:hover {
+      color: var(--violet);
+    }
+
+    .expertise-divider {
+      width: 8px;
+      height: 8px;
+      background: var(--violet);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .expertise-desc {
+      max-width: 700px;
+      margin: 60px auto 0;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    /* Mobile expertise fallback */
+    .expertise-mobile-list {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .expertise-mobile-item {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(24px, 6vw, 36px);
+      font-weight: 700;
+      color: var(--white);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .expertise-mobile-item-desc {
+      font-family: 'Archivo', sans-serif;
+      font-size: var(--body);
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: var(--body);
+    }
+
+    /* ============================================
+       CASE STUDIES SECTION
+    ============================================ */
+    .case-studies {
+      position: relative;
+      background: var(--bg);
+      padding: var(--section-pad-y) 0;
+      overflow: hidden;
+    }
+
+    .case-studies::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(162, 136, 227, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .case-studies-header {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .case-studies-scroll-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .case-studies-scroll {
+      display: flex;
+      gap: 40px;
+      padding: 0 var(--section-pad-x);
+      will-change: transform;
+    }
+
+    .case-card {
+      flex-shrink: 0;
+      width: 80vw;
+      max-width: 1200px;
+      transition: transform 0.1s linear, filter 0.1s linear;
+      cursor: pointer;
+    }
+
+    .case-card-video {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .case-card-video img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .case-card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 40px 24px 24px;
+      background: linear-gradient(to top, rgba(10, 9, 8, 0.9) 0%, transparent 100%);
+    }
+
+    .case-card-overlay h4 {
+      margin-bottom: 4px;
+    }
+
+    .case-card-overlay .metric {
+      color: var(--violet);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: var(--body);
+    }
+
+    .case-card-view {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .case-card:hover .case-card-view {
+      opacity: 1;
+    }
+
+    /* Case studies pagination */
+    .case-studies-pagination {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pagination-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(247, 247, 247, 0.4);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .pagination-dot.active {
+      width: 10px;
+      height: 10px;
+      background: var(--violet);
+      border-color: var(--violet);
+    }
+
+    /* Mobile case studies fallback */
+    .case-studies-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* ============================================
+       TESTIMONIALS SECTION
+    ============================================ */
+    .testimonials {
+      position: relative;
+      background: var(--bg);
+      padding: var(--section-pad-y) 0;
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 32px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .testimonial-quote-icon {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--violet);
+      opacity: 0.3;
+      margin-bottom: 8px;
+    }
+
+    .testimonial-quote {
+      color: var(--white);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .testimonial-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .testimonial-title {
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ============================================
+       ABOUT SECTION
+    ============================================ */
+    .about {
+      position: relative;
+      background: var(--bg);
+      padding: var(--section-pad-y) 0;
+      overflow: hidden;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 50%, rgba(247, 37, 133, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .about-layout {
+      display: flex;
+      gap: 60px;
+      align-items: start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-photo {
+      width: 40%;
+      flex-shrink: 0;
+    }
+
+    .about-photo img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .about-content {
+      flex: 1;
+    }
+
+    .about-content h2 {
+      margin-bottom: 32px;
+    }
+
+    .about-content p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .about-content .highlight {
+      color: var(--violet);
+    }
+
+    .toolkit {
+      margin-top: 40px;
+    }
+
+    .toolkit h5 {
+      margin-bottom: 20px;
+    }
+
+    .toolkit-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .toolkit-item svg {
+      width: 16px;
+      height: 16px;
+      color: var(--violet);
+      flex-shrink: 0;
+    }
+
+    .toolkit-item-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: var(--body);
+    }
+
+    .toolkit-item-desc {
+      color: var(--text-secondary);
+      font-size: var(--body);
+      margin-left: auto;
+    }
+
+    /* ============================================
+       CONTACT SECTION
+    ============================================ */
+    .contact {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: var(--bg);
+      overflow: hidden;
+      padding: var(--section-pad-y) var(--section-pad-x);
+    }
+
+    /* Noise overlay */
+    .contact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/noise-texture.png');
+      background-repeat: repeat;
+      background-size: 256px 256px;
+      opacity: 0.08;
+      animation: noiseShift 0.5s steps(4) infinite;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    @keyframes noiseShift {
+      0% { background-position: 0 0; }
+      25% { background-position: 64px 128px; }
+      50% { background-position: 128px 64px; }
+      75% { background-position: 192px 192px; }
+      100% { background-position: 0 0; }
+    }
+
+    .contact::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 80%, rgba(247, 37, 133, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .contact-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-headline {
+      background: linear-gradient(90deg, var(--white) 0%, var(--violet) 50%, var(--white) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+
+    .contact-subtitle {
+      color: var(--text-secondary);
+      margin-top: 16px;
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(162, 136, 227, 0.1);
+      border: 1px solid rgba(162, 136, 227, 0.2);
+      border-radius: 12px;
+      padding: 16px 32px;
+      margin-top: 40px;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-quart);
+      position: relative;
+    }
+
+    .contact-email:hover {
+      border-color: var(--violet);
+      background: rgba(162, 136, 227, 0.15);
+    }
+
+    .contact-email-text {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: clamp(24px, 3vw, 48px);
+      color: var(--white);
+    }
+
+    .contact-email-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: color 0.3s ease;
+    }
+
+    .contact-email:hover .contact-email-icon {
+      color: var(--violet);
+    }
+
+    .contact-copied {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--violet);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .contact-copied.show {
+      opacity: 1;
+    }
+
+    .contact-socials {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+
+    .contact-social {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+
+    .contact-social:hover {
+      color: var(--white);
+    }
+
+    .contact-social svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Contact Footer */
+    .contact-footer {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 var(--section-pad-x);
+      z-index: 1;
+    }
+
+    .contact-footer-copy {
+      font-size: 12px;
+      color: rgba(247, 247, 247, 0.3);
+    }
+
+    .contact-footer-top {
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .contact-footer-top:hover {
+      color: var(--white);
+    }
+
+    /* ============================================
+       PROJECT OVERLAY
+    ============================================ */
+    .project-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(10, 9, 8, 0.95);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-out-quart);
+      padding: var(--section-pad-x);
+    }
+
+    .project-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .project-overlay-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(247, 247, 247, 0.1);
+      transition: background 0.3s ease;
+      z-index: 10;
+    }
+
+    .project-overlay-close:hover {
+      background: rgba(247, 247, 247, 0.2);
+    }
+
+    .project-overlay-close svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .project-overlay-content {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .project-overlay-video {
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--surface);
+      margin-bottom: 32px;
+    }
+
+    .project-overlay-video img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-overlay-title {
+      margin-bottom: 12px;
+    }
+
+    .project-overlay-desc {
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+
+    .project-overlay-metrics {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .project-overlay-metric {
+      text-align: center;
+    }
+
+    .project-overlay-metric-value {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: var(--h4);
+      color: var(--violet);
+    }
+
+    .project-overlay-metric-label {
+      font-size: var(--nav-label);
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (min-width: 1024px) {
+      .sidebar-nav {
+        display: flex;
+      }
+      .mobile-nav {
+        display: none;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .projects-layout {
+        flex-direction: column;
+      }
+      .projects-sidebar {
+        width: 100%;
+        max-width: none;
+        margin-bottom: 40px;
+      }
+      .projects-sidebar-inner {
+        position: static;
+      }
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+      .about-layout {
+        flex-direction: column;
+      }
+      .about-photo {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .expertise-scroll-wrapper {
+        display: none;
+      }
+      .expertise-mobile-list {
+        display: flex;
+      }
+      .case-studies-scroll-wrapper {
+        display: none;
+      }
+      .case-studies-mobile {
+        display: flex;
+      }
+      .case-studies-pagination {
+        display: none;
+      }
+      .contact-footer {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 567px) {
+      .cylinder-container {
+        display: none;
+      }
+      .hero-content {
+        padding: 0 20px;
+      }
+      .expertise-card {
+        margin: 0 12px;
+        padding: 32px 20px;
+      }
+      .case-card {
+        width: 90vw;
+      }
+      .project-overlay-metrics {
+        gap: 16px;
+      }
+    }
+
+    /* ============================================
+       REDUCED MOTION
+    ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .cylinder {
+        animation: none;
+        transform: rotateX(30deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="header" id="header">
+    <div class="logo">
+      <svg viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.5 32C12.5 32 6 25.7 6 17.5C6 9.3 12.5 3 20.5 3C25.5 3 29.5 5.2 32 8.5L28.5 11C26.8 8.8 23.9 7.3 20.5 7.3C15.1 7.3 10.8 11.7 10.8 17.5C10.8 23.3 15.1 27.7 20.5 27.7C23.9 27.7 26.8 26.2 28.5 24L32 26.5C29.5 29.8 25.5 32 20.5 32Z" fill="#F7F7F7"/>
+        <path d="M38 4H42.5V28H38V4Z" fill="#F7F7F7"/>
+        <circle cx="40.25" cy="31" r="2.5" fill="#A288E3"/>
+        <path d="M50 4H58C64.6 4 69.5 9 69.5 16C69.5 23 64.6 28 58 28H50V4ZM54.5 8V24H57.5C62 24 65 20.8 65 16C65 11.2 62 8 57.5 8H54.5Z" fill="#F7F7F7"/>
+        <path d="M76 4H80.5V24H92V28H76V4Z" fill="#F7F7F7"/>
+        <path d="M97 4H101.5V28H97V4Z" fill="#F7F7F7"/>
+        <circle cx="99.25" cy="31" r="2.5" fill="#A288E3"/>
+        <path d="M110 4H125V8H114.5V13.5H123V17.5H114.5V24H125V28H110V4Z" fill="#F7F7F7"/>
+        <path d="M132 4H136.5V24H148V28H132V4Z" fill="#F7F7F7"/>
+        <path d="M155 4H163C169.6 4 174.5 9 174.5 16C174.5 23 169.6 28 163 28H155V4ZM159.5 8V24H162.5C167 24 170 20.8 170 16C170 11.2 167 8 162.5 8H159.5Z" fill="#F7F7F7"/>
+        <path d="M182 4H186.5V28H182V4Z" fill="#F7F7F7"/>
+        <circle cx="184.25" cy="31" r="2.5" fill="#A288E3"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ============ SIDEBAR NAV (Desktop) ============ -->
+  <nav class="sidebar-nav" id="sidebarNav">
+    <div class="sidebar-nav-item active" data-section="hero">
+      <span class="sidebar-nav-label">Intro</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+    <div class="sidebar-nav-item" data-section="projects">
+      <span class="sidebar-nav-label">Work</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+    <div class="sidebar-nav-item" data-section="expertise">
+      <span class="sidebar-nav-label">Services</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+    <div class="sidebar-nav-item" data-section="case-studies">
+      <span class="sidebar-nav-label">Case Studies</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+    <div class="sidebar-nav-item" data-section="testimonials">
+      <span class="sidebar-nav-label">Testimonials</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+    <div class="sidebar-nav-item" data-section="about">
+      <span class="sidebar-nav-label">About</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+    <div class="sidebar-nav-item" data-section="contact">
+      <span class="sidebar-nav-label">Contact</span>
+      <div class="sidebar-nav-dot"></div>
+    </div>
+  </nav>
+
+  <!-- ============ MOBILE NAV ============ -->
+  <nav class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-item active" data-section="hero">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">Intro</span>
+    </div>
+    <div class="mobile-nav-item" data-section="projects">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">Work</span>
+    </div>
+    <div class="mobile-nav-item" data-section="expertise">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">Services</span>
+    </div>
+    <div class="mobile-nav-item" data-section="case-studies">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">Cases</span>
+    </div>
+    <div class="mobile-nav-item" data-section="testimonials">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">Clients</span>
+    </div>
+    <div class="mobile-nav-item" data-section="about">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">About</span>
+    </div>
+    <div class="mobile-nav-item" data-section="contact">
+      <div class="mobile-nav-dot"></div>
+      <span class="mobile-nav-label">Contact</span>
+    </div>
+  </nav>
+
+  <!-- ============ HERO SECTION ============ -->
+  <section class="hero" id="hero">
+    <!-- 3D Text Cylinder -->
+    <div class="cylinder-container">
+      <div class="cylinder">
+        <div class="cylinder-face">
+          <span>NIKE</span><span>ADIDAS</span><span>LULULEMON</span>
+          <span>GLOWSKIN</span><span>TASKFLOW</span><span>FITPRO</span>
+          <span>CRYPTO</span><span>BLOOM</span><span>SHOPFAST</span>
+        </div>
+        <div class="cylinder-face">
+          <span>APPLE</span><span>SPOTIFY</span><span>NETFLIX</span>
+          <span>TESLA</span><span>STRIPE</span><span>NOTION</span>
+          <span>FIGMA</span><span>SLACK</span><span>AIRTABLE</span>
+        </div>
+        <div class="cylinder-face">
+          <span>META</span><span>GOOGLE</span><span>AMAZON</span>
+          <span>SHOPIFY</span><span>SQUARE</span><span>CANVA</span>
+          <span>DUOLINGO</span><span>UBER</span><span>AIRBNB</span>
+        </div>
+        <div class="cylinder-face">
+          <span>ROLEX</span><span>GUCCI</span><span>PRADA</span>
+          <span>CHANEL</span><span>DIOR</span><span>VERSACE</span>
+          <span>LV</span><span>TIFFANY</span><span>CARTIER</span>
+        </div>
+        <div class="cylinder-face">
+          <span>RED BULL</span><span>GO PRO</span><span>SONY</span>
+          <span>CANON</span><span>DJI</span><span>BOSE</span>
+          <span>OAKLEY</span><span>PATAGONIA</span><span>NORTH FACE</span>
+        </div>
+        <div class="cylinder-face">
+          <span>STARBUCKS</span><span>COCA COLA</span><span>PEPSI</span>
+          <span>MCDONALDS</span><span>KFC</span><span>DOMINOS</span>
+          <span>CHIPOTLE</span><span>WENDYS</span><span>SUBWAY</span>
+        </div>
+      </div>
     </div>
 
-    <!-- ===================== NAVIGATION ===================== -->
-    <nav class="fixed top-0 left-0 w-full z-50 nav-glass opacity-0" id="mainNav">
-        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-            <div class="flex items-center justify-between h-16">
-                <!-- Wordmark -->
-                <a href="#hero" class="font-display font-bold text-xl tracking-tight text-ivory hover:text-crimson transition-colors">
-                    STUDIO
-                </a>
-                
-                <!-- Desktop Nav Links -->
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#work" class="nav-link text-sm font-medium text-stone hover:text-ivory transition-colors">Work</a>
-                    <a href="#services" class="nav-link text-sm font-medium text-stone hover:text-ivory transition-colors">Services</a>
-                    <a href="#about" class="nav-link text-sm font-medium text-stone hover:text-ivory transition-colors">About</a>
-                    <a href="#contact" class="nav-link text-sm font-medium text-stone hover:text-ivory transition-colors">Contact</a>
-                </div>
-                
-                <!-- CTA Button -->
-                <a href="#contact" class="hidden md:inline-flex px-5 py-2.5 bg-crimson text-ivory text-sm font-semibold rounded-full hover:scale-105 transition-transform">
-                    Start a Project
-                </a>
-                
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden flex flex-col gap-1.5 p-2" id="menuBtn" aria-label="Toggle menu">
-                    <span class="w-6 h-0.5 bg-ivory transition-all menu-line-1"></span>
-                    <span class="w-6 h-0.5 bg-ivory transition-all menu-line-2"></span>
-                    <span class="w-4 h-0.5 bg-ivory transition-all menu-line-3"></span>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Mobile Menu -->
-        <div class="md:hidden fixed inset-0 top-16 bg-void/98 backdrop-blur-xl z-40 opacity-0 pointer-events-none transition-opacity duration-300" id="mobileMenu">
-            <div class="flex flex-col items-center justify-center h-full gap-8">
-                <a href="#work" class="mobile-nav-link text-2xl font-semibold text-ivory">Work</a>
-                <a href="#services" class="mobile-nav-link text-2xl font-semibold text-ivory">Services</a>
-                <a href="#about" class="mobile-nav-link text-2xl font-semibold text-ivory">About</a>
-                <a href="#contact" class="mobile-nav-link text-2xl font-semibold text-ivory">Contact</a>
-                <a href="#contact" class="mt-4 px-8 py-3 bg-crimson text-ivory font-semibold rounded-full">Start a Project</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <span class="label section-label hero-label">01 — Intro</span>
+      <h1 class="h1 hero-headline">
+        <span class="line">VIDEO ADS</span>
+        <span class="line">SPECIALIST</span>
+      </h1>
+      <p class="h4 hero-subtitle">High-Converting E-commerce &amp; TikTok, Instagram</p>
+      <p class="body-lg hero-desc">I create scroll-stopping, high-converting video ads designed to hook viewers in the first 3 seconds and drive sales.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary" data-scroll>
+          VIEW MY WORK
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
 
-    <!-- ===================== HERO SECTION ===================== -->
-    <section id="hero" class="relative min-h-screen w-full overflow-hidden flex items-center">
-        <!-- Animated Gradient Background -->
-        <div class="absolute inset-0 z-0">
-            <div class="gradient-mesh"></div>
-        </div>
-        
-        <!-- Hero Content -->
-        <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 py-20">
-            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-4 max-w-[1400px] mx-auto">
-                
-                <!-- Left Column: Text -->
-                <div class="w-full lg:w-[55%] text-center lg:text-left">
-                    <!-- Badge -->
-                    <div class="hero-badge inline-flex items-center px-5 py-2 bg-lime text-void font-mono text-xs uppercase tracking-widest rounded-full mb-6 opacity-0">
-                        Video Ads Specialist
-                    </div>
-                    
-                    <!-- Headlines -->
-                    <div class="overflow-hidden">
-                        <h1 class="hero-headline font-display font-black uppercase leading-[0.9] tracking-[-0.03em] text-[14vw] sm:text-[12vw] lg:text-[8vw] text-ivory opacity-0">
-                            I CREATE
-                        </h1>
-                    </div>
-                    <div class="overflow-hidden">
-                        <h1 class="hero-headline font-display font-black uppercase leading-[0.9] tracking-[-0.03em] text-[14vw] sm:text-[12vw] lg:text-[8vw] text-ivory opacity-0">
-                            SCROLL-
-                        </h1>
-                    </div>
-                    <div class="overflow-hidden">
-                        <h1 class="hero-headline font-display font-black uppercase leading-[0.9] tracking-[-0.03em] text-[14vw] sm:text-[12vw] lg:text-[8vw] text-crimson opacity-0">
-                            STOPPING
-                        </h1>
-                    </div>
-                    <div class="overflow-hidden">
-                        <h1 class="hero-headline font-display font-black uppercase leading-[0.9] tracking-[-0.03em] text-[14vw] sm:text-[12vw] lg:text-[8vw] text-ivory opacity-0">
-                            VIDEO ADS
-                        </h1>
-                    </div>
-                    
-                    <!-- Subheadline -->
-                    <p class="hero-sub text-stone text-base sm:text-lg max-w-[480px] mx-auto lg:mx-0 mt-6 opacity-0">
-                        High-converting creative for TikTok, Instagram & YouTube. Hook viewers in 3 seconds. Drive sales.
-                    </p>
-                    
-                    <!-- CTA Buttons -->
-                    <div class="hero-cta flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mt-8 opacity-0">
-                        <a href="#work" class="px-8 py-4 bg-crimson text-ivory font-semibold rounded-full hover:scale-105 transition-transform text-center">
-                            View My Work
-                        </a>
-                        <a href="#contact" class="px-8 py-4 border border-stone text-ivory font-semibold rounded-full hover:border-ivory transition-colors text-center">
-                            Let's Talk
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Right Column: Video Columns -->
-                <div class="hidden lg:block w-[45%] h-[85vh] relative overflow-hidden">
-                    <div class="video-columns-container absolute inset-0 flex gap-3">
-                        <!-- Column 1: Scrolls Down -->
-                        <div class="video-col video-col-down flex-1 flex flex-col gap-3" id="videoCol1">
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-1.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-2.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-3.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-4.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <!-- Duplicates for seamless loop -->
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-1.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-2.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-3.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-4.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                        </div>
-                        
-                        <!-- Column 2: Scrolls Up -->
-                        <div class="video-col video-col-up flex-1 flex flex-col gap-3" id="videoCol2">
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-5.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-6.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-7.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-8.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <!-- Duplicates -->
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-5.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-6.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-7.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-8.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                        </div>
-                        
-                        <!-- Column 3: Scrolls Down -->
-                        <div class="video-col video-col-down flex-1 flex flex-col gap-3" id="videoCol3">
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-9.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-10.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-11.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-12.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <!-- Duplicates -->
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-9.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-10.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-11.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                            <div class="video-card aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                                <img src="assets/video-thumb-12.jpg" alt="Video work" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Gradient Overlays -->
-                    <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-void to-transparent z-10 pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-void to-transparent z-10 pointer-events-none"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <svg viewBox="0 0 24 24">
+        <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </section>
 
-    <!-- ===================== SELECTED WORK SECTION ===================== -->
-    <section id="work" class="relative min-h-screen w-full overflow-hidden">
-        <!-- Diagonal Panel -->
-        <div class="diagonal-panel absolute inset-0 bg-crimson z-0" id="diagonalPanel"></div>
-        
-        <!-- Content -->
-        <div class="diagonal-content relative z-10 min-h-screen flex flex-col justify-center py-20 lg:py-0">
-            <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-                <!-- Section Label -->
-                <p class="font-mono text-xs uppercase tracking-[0.08em] text-ivory/60 mb-8">Selected Work</p>
-                
-                <!-- Video Collage: 3 Horizontal Rows -->
-                <div class="space-y-4 overflow-hidden">
-                    <!-- Row 1: Scrolls Left -->
-                    <div class="work-row-left flex gap-4 w-max" id="workRow1">
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-1.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-2.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-3.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-1.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-2.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-3.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    
-                    <!-- Row 2: Scrolls Right -->
-                    <div class="work-row-right flex gap-4 w-max" id="workRow2">
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-4.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-5.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-6.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-4.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-5.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-6.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                    
-                    <!-- Row 3: Scrolls Left -->
-                    <div class="work-row-left flex gap-4 w-max" id="workRow3">
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-7.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-8.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-9.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-7.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-8.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                        <div class="work-card w-[280px] sm:w-[320px] aspect-video rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="assets/work-thumb-9.jpg" alt="Work" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- CTA -->
-                <div class="mt-12">
-                    <a href="#contact" class="inline-flex items-center gap-2 text-ivory font-semibold text-lg group">
-                        View All Projects
-                        <span class="group-hover:translate-x-2 transition-transform">&rarr;</span>
-                    </a>
-                </div>
-            </div>
+  <!-- ============ PROJECTS SECTION ============ -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <div class="projects-layout">
+        <!-- Sidebar -->
+        <div class="projects-sidebar">
+          <div class="projects-sidebar-inner">
+            <span class="label section-label">02 — Work</span>
+            <h2 class="h2">SELECTED<br>WORK</h2>
+            <p class="body-lg role">Role: Video Ads Specialist &amp; Motion Designer</p>
+            <p class="body desc">A curated collection of high-performing video ads, SaaS demos, and motion graphics campaigns. Each project is crafted to maximize engagement and conversion.</p>
+            <a href="#contact" class="btn-primary" data-scroll>START A PROJECT</a>
+          </div>
         </div>
-    </section>
 
-    <!-- ===================== SERVICES SECTION ===================== -->
-    <section id="services" class="relative min-h-screen w-full bg-void py-24 lg:py-32">
-        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-            <!-- Section Header -->
-            <div class="text-center mb-16">
-                <div class="service-badge inline-flex items-center px-5 py-2 bg-lime text-void font-mono text-xs uppercase tracking-widest rounded-full mb-6">
-                    What I Do
-                </div>
-                <h2 class="font-display font-bold uppercase tracking-[-0.02em] text-[10vw] sm:text-[8vw] lg:text-[4.5vw] text-ivory">
-                    Services
-                </h2>
-                <p class="text-stone mt-4 text-lg">Scroll to explore</p>
+        <!-- Project Cards -->
+        <div class="projects-list">
+          <div class="project-card" data-project="0">
+            <div class="project-card-video">
+              <img src="assets/project-glowskin.jpg" alt="GlowSkin E-commerce Ad">
+              <div class="project-card-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
             </div>
-            
-            <!-- 3D Carousel Container -->
-            <div class="relative h-[60vh] lg:h-[70vh] flex items-center justify-center" id="carouselContainer">
-                <div id="services-canvas" class="absolute inset-0"></div>
-                
-                <!-- Fallback: Service Cards Grid -->
-                <div class="service-fallback grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-[1400px]">
-                    <div class="service-card-fallback bg-surface/80 backdrop-blur-sm border border-ivory/[0.08] rounded-2xl p-6 hover:-translate-y-1 hover:border-ivory/20 transition-all">
-                        <div class="w-12 h-12 rounded-xl bg-crimson/20 flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6 text-crimson" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </div>
-                        <h3 class="font-display font-semibold text-lg text-ivory mb-2">Social Media Video Ads</h3>
-                        <p class="text-stone text-sm">High-impact creatives for TikTok, Meta, YouTube Shorts</p>
-                    </div>
-                    
-                    <div class="service-card-fallback bg-surface/80 backdrop-blur-sm border border-ivory/[0.08] rounded-2xl p-6 hover:-translate-y-1 hover:border-ivory/20 transition-all">
-                        <div class="w-12 h-12 rounded-xl bg-crimson/20 flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6 text-crimson" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        </div>
-                        <h3 class="font-display font-semibold text-lg text-ivory mb-2">SaaS & App Demos</h3>
-                        <p class="text-stone text-sm">Engaging promotional videos for tech products</p>
-                    </div>
-                    
-                    <div class="service-card-fallback bg-surface/80 backdrop-blur-sm border border-ivory/[0.08] rounded-2xl p-6 hover:-translate-y-1 hover:border-ivory/20 transition-all">
-                        <div class="w-12 h-12 rounded-xl bg-crimson/20 flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6 text-crimson" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        </div>
-                        <h3 class="font-display font-semibold text-lg text-ivory mb-2">UGC & Direct Response</h3>
-                        <p class="text-stone text-sm">Raw footage into dynamic, high-converting ads</p>
-                    </div>
-                    
-                    <div class="service-card-fallback bg-surface/80 backdrop-blur-sm border border-ivory/[0.08] rounded-2xl p-6 hover:-translate-y-1 hover:border-ivory/20 transition-all">
-                        <div class="w-12 h-12 rounded-xl bg-crimson/20 flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6 text-crimson" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                        </div>
-                        <h3 class="font-display font-semibold text-lg text-ivory mb-2">Motion Graphics</h3>
-                        <p class="text-stone text-sm">Text animations, sound effects, visual FX</p>
-                    </div>
-                </div>
+            <div class="project-card-info">
+              <h4 class="h4">GlowSkin — E-commerce Ad</h4>
+              <p class="body">High-converting TikTok ad for a skincare brand featuring fast-paced editing, trending audio sync, and dynamic text animations.</p>
+              <div class="project-card-tags">
+                <span class="tag">TikTok</span>
+                <span class="tag">Meta</span>
+              </div>
             </div>
+          </div>
+
+          <div class="project-card" data-project="1">
+            <div class="project-card-video">
+              <img src="assets/project-taskflow.jpg" alt="TaskFlow SaaS Demo">
+              <div class="project-card-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="project-card-info">
+              <h4 class="h4">TaskFlow — SaaS Demo</h4>
+              <p class="body">Engaging product demo video for a productivity app with clean motion graphics, screen recordings, and clear value proposition.</p>
+              <div class="project-card-tags">
+                <span class="tag">YouTube</span>
+                <span class="tag">Meta</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card" data-project="2">
+            <div class="project-card-video">
+              <img src="assets/project-fitpro.jpg" alt="FitPro UGC Ad">
+              <div class="project-card-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="project-card-info">
+              <h4 class="h4">FitPro — UGC Style Ad</h4>
+              <p class="body">Authentic user-generated content style ad for a fitness brand with raw footage editing, quick cuts, and energetic pacing.</p>
+              <div class="project-card-tags">
+                <span class="tag">TikTok</span>
+                <span class="tag">Instagram</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card" data-project="3">
+            <div class="project-card-video">
+              <img src="assets/project-cryptovault.jpg" alt="CryptoVault App Promo">
+              <div class="project-card-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="project-card-info">
+              <h4 class="h4">CryptoVault — App Promo</h4>
+              <p class="body">Sleek promotional video for a crypto wallet app with futuristic visuals, smooth transitions, and tech-inspired motion design.</p>
+              <div class="project-card-tags">
+                <span class="tag">YouTube</span>
+                <span class="tag">Meta</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card" data-project="4">
+            <div class="project-card-video">
+              <img src="assets/project-bloom.jpg" alt="Bloom Brand Film">
+              <div class="project-card-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="project-card-info">
+              <h4 class="h4">Bloom — Brand Awareness</h4>
+              <p class="body">Cinematic brand film for a luxury floral subscription service with elegant slow-motion footage and emotional storytelling.</p>
+              <div class="project-card-tags">
+                <span class="tag">Instagram</span>
+                <span class="tag">YouTube</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card" data-project="5">
+            <div class="project-card-video">
+              <img src="assets/project-shopfast.jpg" alt="ShopFast DTC Campaign">
+              <div class="project-card-play">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <div class="project-card-info">
+              <h4 class="h4">ShopFast — DTC Campaign</h4>
+              <p class="body">Direct-response video ad series for an e-commerce fashion brand optimized for high ROAS with strong hooks and CTAs.</p>
+              <div class="project-card-tags">
+                <span class="tag">TikTok</span>
+                <span class="tag">Meta</span>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- ===================== ABOUT / MANIFESTO SECTION ===================== -->
-    <section id="about" class="relative w-full bg-void">
-        <!-- Sticky Container -->
-        <div class="manifesto-sticky h-screen sticky top-0 overflow-hidden flex items-center justify-center">
-            <!-- Background Label -->
-            <div class="absolute top-8 left-1/2 -translate-x-1/2 z-0">
-                <p class="font-display font-bold uppercase text-[8vw] lg:text-[4.5vw] text-ivory/[0.03] whitespace-nowrap">The Manifesto</p>
-            </div>
-            
-            <!-- Manifesto Text Container -->
-            <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-[1400px]">
-                <div class="manifesto-text-container h-[40vh] flex items-center justify-center overflow-hidden relative">
-                    
-                    <div class="manifesto-block absolute text-center w-full" data-index="0">
-                        <p class="font-display font-bold text-[6vw] sm:text-[5vw] lg:text-[3.5vw] text-ivory leading-tight">
-                            Every <span class="highlight-word">scroll</span> is a decision.
-                        </p>
-                    </div>
-                    
-                    <div class="manifesto-block absolute text-center w-full opacity-0" data-index="1">
-                        <p class="font-display font-bold text-[6vw] sm:text-[5vw] lg:text-[3.5vw] text-ivory leading-tight">
-                            In the first <span class="highlight-word">3 seconds</span>, I hook.
-                        </p>
-                    </div>
-                    
-                    <div class="manifesto-block absolute text-center w-full opacity-0" data-index="2">
-                        <p class="font-display font-bold text-[6vw] sm:text-[5vw] lg:text-[3.5vw] text-ivory leading-tight">
-                            Data-driven creative that <span class="highlight-word">converts</span>.
-                        </p>
-                    </div>
-                    
-                    <div class="manifesto-block absolute text-center w-full opacity-0" data-index="3">
-                        <p class="font-display font-bold text-[6vw] sm:text-[5vw] lg:text-[3.5vw] text-ivory leading-tight">
-                            Built like a <span class="highlight-word">funnel</span>, not just a video.
-                        </p>
-                    </div>
-                    
-                    <div class="manifesto-block absolute text-center w-full opacity-0" data-index="4">
-                        <p class="font-display font-bold text-[6vw] sm:text-[5vw] lg:text-[3.5vw] text-ivory leading-tight">
-                            Your viewers become <span class="highlight-word">customers</span>.
-                        </p>
-                    </div>
-                </div>
-            </div>
+  <!-- ============ EXPERTISE SECTION ============ -->
+  <section class="expertise" id="expertise">
+    <div class="expertise-card">
+      <div class="expertise-header">
+        <span class="label section-label">03 — Services</span>
+        <h2 class="h2">WHAT I DO</h2>
+      </div>
+
+      <!-- Desktop: Horizontal Scroll -->
+      <div class="expertise-scroll-wrapper" id="expertiseWrapper">
+        <div class="expertise-scroll" id="expertiseScroll">
+          <span class="expertise-item">Social Media Video Ads</span>
+          <span class="expertise-divider"></span>
+          <span class="expertise-item">SaaS &amp; App Demos</span>
+          <span class="expertise-divider"></span>
+          <span class="expertise-item">UGC &amp; Direct Response</span>
+          <span class="expertise-divider"></span>
+          <span class="expertise-item">Motion Graphics</span>
+          <span class="expertise-divider"></span>
+          <span class="expertise-item">Video Editing</span>
+          <span class="expertise-divider"></span>
+          <span class="expertise-item">Captions &amp; Subtitles</span>
+          <span class="expertise-divider"></span>
+          <span class="expertise-item">Creative Strategy</span>
         </div>
-        
-        <!-- Scroll Spacer -->
-        <div class="manifesto-spacer h-[400vh]"></div>
-    </section>
+      </div>
 
-    <!-- ===================== STATS SECTION ===================== -->
-    <section id="stats" class="relative w-full bg-void py-24 lg:py-32">
-        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-[1400px] mx-auto">
-            <!-- Section Label -->
-            <p class="font-mono text-xs uppercase tracking-[0.08em] text-stone mb-12">By The Numbers</p>
-            
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
-                <!-- Stat 1 -->
-                <div class="stat-item text-center md:text-left opacity-0">
-                    <div class="stat-number font-display font-black text-[15vw] sm:text-[12vw] md:text-[8vw] text-ivory leading-none tracking-[-0.03em]" data-value="2.5" data-prefix="$" data-suffix="M+">
-                        $0.0M+
-                    </div>
-                    <p class="text-stone text-base lg:text-lg mt-4">Revenue Generated for Clients</p>
-                </div>
-                
-                <!-- Stat 2 -->
-                <div class="stat-item text-center md:text-left opacity-0">
-                    <div class="stat-number font-display font-black text-[15vw] sm:text-[12vw] md:text-[8vw] text-ivory leading-none tracking-[-0.03em]" data-value="500" data-prefix="" data-suffix="+">
-                        0+
-                    </div>
-                    <p class="text-stone text-base lg:text-lg mt-4">Video Ads Produced</p>
-                </div>
-                
-                <!-- Stat 3 -->
-                <div class="stat-item text-center md:text-left opacity-0">
-                    <div class="stat-number font-display font-black text-[15vw] sm:text-[12vw] md:text-[8vw] text-ivory leading-none tracking-[-0.03em]" data-value="3" data-prefix="" data-suffix="x">
-                        0x
-                    </div>
-                    <p class="text-stone text-base lg:text-lg mt-4">Average ROAS Improvement</p>
-                </div>
-            </div>
-            
-            <!-- Accent Line -->
-            <div class="stat-line h-[3px] bg-crimson mt-16 w-0"></div>
+      <!-- Mobile: Vertical List -->
+      <div class="expertise-mobile-list">
+        <div class="expertise-mobile-item">
+          Social Media Video Ads
+          <div class="expertise-mobile-item-desc">High-impact creatives for TikTok, Meta, and YouTube Shorts optimized for maximum engagement</div>
         </div>
-    </section>
-
-    <!-- ===================== APP SHOWCASE SECTION ===================== -->
-    <section id="showcase" class="relative w-full bg-surface py-24 lg:py-32">
-        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-            <!-- Section Header -->
-            <div class="text-center mb-16">
-                <div class="inline-flex items-center px-5 py-2 bg-lime text-void font-mono text-xs uppercase tracking-widest rounded-full mb-6">
-                    SaaS & App Demos
-                </div>
-                <h2 class="font-display font-bold uppercase tracking-[-0.02em] text-[10vw] sm:text-[8vw] lg:text-[4.5vw] text-ivory">
-                    Tech Products Brought to Life
-                </h2>
-            </div>
-            
-            <!-- Device Stage -->
-            <div class="relative h-[500px] sm:h-[600px] flex items-center justify-center" id="deviceStage">
-                <!-- Floating Cards -->
-                <div class="floating-card absolute w-[140px] sm:w-[180px] lg:w-[200px] rounded-xl overflow-hidden shadow-2xl top-[5%] left-[5%] sm:left-[10%]" style="transform: rotate(-8deg);" data-card="0">
-                    <img src="assets/app-floating-1.jpg" alt="Behind the scenes" class="w-full h-full object-cover">
-                </div>
-                <div class="floating-card absolute w-[120px] sm:w-[160px] lg:w-[180px] rounded-xl overflow-hidden shadow-2xl top-[8%] right-[5%] sm:right-[10%]" style="transform: rotate(6deg);" data-card="1">
-                    <img src="assets/app-floating-2.jpg" alt="Analytics" class="w-full h-full object-cover">
-                </div>
-                <div class="floating-card absolute w-[150px] sm:w-[180px] lg:w-[220px] rounded-xl overflow-hidden shadow-2xl bottom-[10%] left-[3%] sm:left-[8%]" style="transform: rotate(5deg);" data-card="2">
-                    <img src="assets/app-floating-3.jpg" alt="TikTok shoot" class="w-full h-full object-cover">
-                </div>
-                <div class="floating-card absolute w-[130px] sm:w-[150px] lg:w-[190px] rounded-xl overflow-hidden shadow-2xl bottom-[8%] right-[3%] sm:right-[8%]" style="transform: rotate(-4deg);" data-card="3">
-                    <img src="assets/app-floating-4.jpg" alt="Motion graphics" class="w-full h-full object-cover">
-                </div>
-                
-                <!-- Central Device -->
-                <div class="device-mockup relative w-[260px] sm:w-[320px] lg:w-[360px] h-[520px] sm:h-[640px] lg:h-[720px] rounded-[32px] lg:rounded-[40px] overflow-hidden border-[6px] lg:border-[8px] border-ivory/10 shadow-[0_40px_80px_rgba(0,0,0,0.5)] z-10">
-                    <!-- Device Inner Shadow -->
-                    <div class="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.3)] rounded-[24px] lg:rounded-[32px] z-20 pointer-events-none"></div>
-                    
-                    <!-- Slides -->
-                    <div class="device-slides relative w-full h-full">
-                        <div class="device-slide absolute inset-0 opacity-100 transition-opacity duration-700" data-slide="0">
-                            <img src="assets/app-demo-1.jpg" alt="App demo 1" class="w-full h-full object-cover">
-                        </div>
-                        <div class="device-slide absolute inset-0 opacity-0 transition-opacity duration-700" data-slide="1">
-                            <img src="assets/app-demo-2.jpg" alt="App demo 2" class="w-full h-full object-cover">
-                        </div>
-                        <div class="device-slide absolute inset-0 opacity-0 transition-opacity duration-700" data-slide="2">
-                            <img src="assets/app-demo-3.jpg" alt="App demo 3" class="w-full h-full object-cover">
-                        </div>
-                        <div class="device-slide absolute inset-0 opacity-0 transition-opacity duration-700" data-slide="3">
-                            <img src="assets/app-demo-4.jpg" alt="App demo 4" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Caption -->
-            <p class="text-stone text-center text-lg mt-12 max-w-xl mx-auto">
-                Promotional videos for software, apps, and digital products.
-            </p>
+        <div class="expertise-mobile-item">
+          SaaS &amp; App Demos
+          <div class="expertise-mobile-item-desc">Engaging, clear promotional videos for tech products with motion graphics and screen recordings</div>
         </div>
-    </section>
-
-    <!-- ===================== TOOLKIT MARQUEE SECTION ===================== -->
-    <section class="relative w-full bg-void py-16 border-y border-ivory/[0.06] overflow-hidden">
-        <div class="toolkit-marquee flex whitespace-nowrap gap-16" id="toolkitMarquee">
-            <div class="flex items-center gap-16">
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Premiere Pro</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">After Effects</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">CapCut Pro</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Photoshop</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Illustrator</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">DaVinci Resolve</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Figma</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-            </div>
-            <!-- Duplicate for seamless loop -->
-            <div class="flex items-center gap-16">
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Premiere Pro</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">After Effects</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">CapCut Pro</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Photoshop</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Illustrator</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">DaVinci Resolve</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-                <span class="text-stone text-xl sm:text-2xl font-medium hover:text-ivory transition-colors cursor-default">Figma</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-lime flex-shrink-0"></span>
-            </div>
+        <div class="expertise-mobile-item">
+          UGC &amp; Direct Response
+          <div class="expertise-mobile-item-desc">Raw footage transformed into dynamic ads optimized for high Hook Rates and Retention</div>
         </div>
-    </section>
-
-    <!-- ===================== CONTACT SECTION ===================== -->
-    <section id="contact" class="relative min-h-screen w-full bg-void flex flex-col items-center justify-center py-24 lg:py-32 overflow-hidden">
-        <!-- Background Gradient -->
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(18,18,20,1)_0%,_rgba(9,9,10,1)_70%)]"></div>
-        
-        <div class="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 text-center">
-            <!-- Headline -->
-            <h2 class="contact-headline font-display font-black uppercase tracking-[-0.03em] text-[16vw] sm:text-[12vw] lg:text-[8vw] text-ivory leading-[0.9]">
-                LET'S WORK
-            </h2>
-            
-            <!-- Subheadline -->
-            <p class="text-stone text-lg sm:text-xl lg:text-2xl mt-6 max-w-xl mx-auto">
-                Ready to stop the scroll and start converting?
-            </p>
-            
-            <!-- CTA Button -->
-            <a href="mailto:hello@videoads.studio" class="inline-flex px-10 sm:px-12 py-4 sm:py-5 bg-crimson text-ivory font-semibold text-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(224,48,0,0.4)] transition-all mt-10">
-                Start a Project
-            </a>
-            
-            <!-- Email -->
-            <a href="mailto:hello@videoads.studio" class="block font-mono text-stone hover:text-ivory transition-colors mt-8 text-sm sm:text-base">
-                hello@videoads.studio
-            </a>
-            
-            <!-- Orbit Container -->
-            <div class="relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] mx-auto mt-16" id="orbitContainer">
-                <!-- Center Label -->
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                    <p class="font-mono text-xs uppercase tracking-widest text-stone whitespace-nowrap">Find Me On</p>
-                </div>
-                
-                <!-- Orbit Icons -->
-                <a href="#" class="orbit-icon absolute w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-surface rounded-full border border-ivory/10 text-stone hover:text-ivory hover:scale-125 hover:border-ivory/30 transition-all z-20" data-radius="100" data-speed="8" data-angle="0" aria-label="YouTube">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                </a>
-                <a href="#" class="orbit-icon absolute w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-surface rounded-full border border-ivory/10 text-stone hover:text-ivory hover:scale-125 hover:border-ivory/30 transition-all z-20" data-radius="140" data-speed="12" data-angle="72" aria-label="Instagram">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-                </a>
-                <a href="#" class="orbit-icon absolute w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-surface rounded-full border border-ivory/10 text-stone hover:text-ivory hover:scale-125 hover:border-ivory/30 transition-all z-20" data-radius="120" data-speed="10" data-angle="144" aria-label="TikTok">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
-                </a>
-                <a href="#" class="orbit-icon absolute w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-surface rounded-full border border-ivory/10 text-stone hover:text-ivory hover:scale-125 hover:border-ivory/30 transition-all z-20" data-radius="160" data-speed="15" data-angle="216" aria-label="LinkedIn">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                </a>
-                <a href="mailto:hello@videoads.studio" class="orbit-icon absolute w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-surface rounded-full border border-ivory/10 text-stone hover:text-ivory hover:scale-125 hover:border-ivory/30 transition-all z-20" data-radius="80" data-speed="6" data-angle="288" aria-label="Email">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </a>
-            </div>
+        <div class="expertise-mobile-item">
+          Motion Graphics
+          <div class="expertise-mobile-item-desc">Animated text, logos, and visual effects that elevate brand presence</div>
         </div>
-        
-        <!-- Footer -->
-        <footer class="absolute bottom-0 left-0 w-full py-6 text-center">
-            <p class="font-mono text-xs text-stone">&copy; 2025 Video Ads Studio. All rights reserved.</p>
-        </footer>
-    </section>
+        <div class="expertise-mobile-item">
+          Video Editing
+          <div class="expertise-mobile-item-desc">Professional editing with pacing optimized for platform algorithms and conversions</div>
+        </div>
+        <div class="expertise-mobile-item">
+          Captions &amp; Subtitles
+          <div class="expertise-mobile-item-desc">Eye-catching text animations designed for silent viewing (85% of social videos)</div>
+        </div>
+        <div class="expertise-mobile-item">
+          Creative Strategy
+          <div class="expertise-mobile-item-desc">Data-driven creative direction based on performance metrics and consumer psychology</div>
+        </div>
+      </div>
 
-    <script src="script.js"></script>
+      <p class="body-lg expertise-desc">From concept to final delivery, I handle every aspect of video ad production. My background in software development gives me a unique analytical approach to creative work — I build ads like high-converting funnels, not just pretty videos.</p>
+    </div>
+  </section>
+
+  <!-- ============ CASE STUDIES SECTION ============ -->
+  <section class="case-studies" id="case-studies">
+    <div class="case-studies-header">
+      <span class="label section-label">04 — Case Studies</span>
+      <h2 class="h2">FEATURED PROJECTS</h2>
+    </div>
+
+    <!-- Desktop: Horizontal Scroll -->
+    <div class="case-studies-scroll-wrapper" id="caseStudiesWrapper">
+      <div class="case-studies-scroll" id="caseStudiesScroll">
+        <div class="case-card" data-case="0">
+          <div class="case-card-video">
+            <img src="assets/project-glowskin.jpg" alt="GlowSkin Campaign">
+            <div class="case-card-overlay">
+              <h4 class="h4">GlowSkin Campaign</h4>
+              <span class="metric">3.2M Views, 4.5% CTR</span>
+            </div>
+            <span class="case-card-view">View Project</span>
+          </div>
+        </div>
+
+        <div class="case-card" data-case="1">
+          <div class="case-card-video">
+            <img src="assets/project-taskflow.jpg" alt="TaskFlow Launch">
+            <div class="case-card-overlay">
+              <h4 class="h4">TaskFlow Launch</h4>
+              <span class="metric">1.8M Views, 12% Sign-up Rate</span>
+            </div>
+            <span class="case-card-view">View Project</span>
+          </div>
+        </div>
+
+        <div class="case-card" data-case="2">
+          <div class="case-card-video">
+            <img src="assets/project-fitpro.jpg" alt="FitPro Challenge">
+            <div class="case-card-overlay">
+              <h4 class="h4">FitPro Challenge</h4>
+              <span class="metric">5.1M Views, 8.2% Engagement</span>
+            </div>
+            <span class="case-card-view">View Project</span>
+          </div>
+        </div>
+
+        <div class="case-card" data-case="3">
+          <div class="case-card-video">
+            <img src="assets/project-cryptovault.jpg" alt="CryptoVault Promo">
+            <div class="case-card-overlay">
+              <h4 class="h4">CryptoVault Promo</h4>
+              <span class="metric">2.4M Views, 6.1% CTR</span>
+            </div>
+            <span class="case-card-view">View Project</span>
+          </div>
+        </div>
+
+        <div class="case-card" data-case="4">
+          <div class="case-card-video">
+            <img src="assets/project-bloom.jpg" alt="Bloom Brand Film">
+            <div class="case-card-overlay">
+              <h4 class="h4">Bloom Brand Film</h4>
+              <span class="metric">890K Views, 15% Share Rate</span>
+            </div>
+            <span class="case-card-view">View Project</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile: Vertical Cards -->
+    <div class="container">
+      <div class="case-studies-mobile">
+        <div class="project-card" data-case="0">
+          <div class="project-card-video">
+            <img src="assets/project-glowskin.jpg" alt="GlowSkin Campaign">
+          </div>
+          <div class="project-card-info">
+            <h4 class="h4">GlowSkin Campaign</h4>
+            <p class="body" style="color: var(--violet); font-weight: 600;">3.2M Views, 4.5% CTR</p>
+          </div>
+        </div>
+        <div class="project-card" data-case="1">
+          <div class="project-card-video">
+            <img src="assets/project-taskflow.jpg" alt="TaskFlow Launch">
+          </div>
+          <div class="project-card-info">
+            <h4 class="h4">TaskFlow Launch</h4>
+            <p class="body" style="color: var(--violet); font-weight: 600;">1.8M Views, 12% Sign-up Rate</p>
+          </div>
+        </div>
+        <div class="project-card" data-case="2">
+          <div class="project-card-video">
+            <img src="assets/project-fitpro.jpg" alt="FitPro Challenge">
+          </div>
+          <div class="project-card-info">
+            <h4 class="h4">FitPro Challenge</h4>
+            <p class="body" style="color: var(--violet); font-weight: 600;">5.1M Views, 8.2% Engagement</p>
+          </div>
+        </div>
+        <div class="project-card" data-case="3">
+          <div class="project-card-video">
+            <img src="assets/project-cryptovault.jpg" alt="CryptoVault Promo">
+          </div>
+          <div class="project-card-info">
+            <h4 class="h4">CryptoVault Promo</h4>
+            <p class="body" style="color: var(--violet); font-weight: 600;">2.4M Views, 6.1% CTR</p>
+          </div>
+        </div>
+        <div class="project-card" data-case="4">
+          <div class="project-card-video">
+            <img src="assets/project-bloom.jpg" alt="Bloom Brand Film">
+          </div>
+          <div class="project-card-info">
+            <h4 class="h4">Bloom Brand Film</h4>
+            <p class="body" style="color: var(--violet); font-weight: 600;">890K Views, 15% Share Rate</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Dots -->
+    <div class="case-studies-pagination" id="caseStudiesPagination">
+      <button class="pagination-dot active" data-index="0"></button>
+      <button class="pagination-dot" data-index="1"></button>
+      <button class="pagination-dot" data-index="2"></button>
+      <button class="pagination-dot" data-index="3"></button>
+      <button class="pagination-dot" data-index="4"></button>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS SECTION ============ -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="testimonials-header">
+        <span class="label section-label">05 — Testimonials</span>
+        <h2 class="h2">CLIENT WORDS</h2>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-quote-icon">"</div>
+          <p class="body-lg testimonial-quote">The video ads created for our TikTok campaign completely transformed our engagement rates. We went from 1% to 4.5% CTR in just two weeks. The creative approach and attention to platform-specific details made all the difference.</p>
+          <p class="testimonial-name">Sarah Chen</p>
+          <p class="testimonial-title">Marketing Director, GlowSkin</p>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-quote-icon">"</div>
+          <p class="body-lg testimonial-quote">Working with this team on our SaaS demo video was a game-changer. They understood our product deeply and created a video that clearly communicated our value proposition. Our sign-up rate increased by 40%.</p>
+          <p class="testimonial-name">Marcus Johnson</p>
+          <p class="testimonial-title">CEO, TaskFlow</p>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-quote-icon">"</div>
+          <p class="body-lg testimonial-quote">The UGC-style ads felt authentic and performed incredibly well. The hook rates were the highest we've ever seen, and the creative iteration speed allowed us to scale our campaigns fast.</p>
+          <p class="testimonial-name">Emily Rodriguez</p>
+          <p class="testimonial-title">Growth Lead, FitPro</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT SECTION ============ -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-layout">
+        <div class="about-photo">
+          <img src="assets/profile-photo.jpg" alt="Profile Photo">
+        </div>
+        <div class="about-content">
+          <span class="label section-label">06 — About</span>
+          <h2 class="h2">THE CREATOR</h2>
+          <p class="body-lg">I'm a Video Ads Specialist and Motion Designer with a unique background — I started my career in software development before transitioning to creative work. This gives me a rare analytical perspective on video creation.</p>
+          <p class="body-lg">I don't just make videos look pretty; I build them like high-converting funnels. Every frame, every cut, every text animation is strategically designed to hook viewers, maintain retention, and drive action. I understand consumer psychology, direct response marketing principles, and platform algorithms.</p>
+          <p class="body-lg highlight">Whether you're scaling a brand, launching an app, or running e-commerce campaigns, I bring a data-driven creative approach that delivers measurable results.</p>
+
+          <div class="toolkit">
+            <h5 class="h5">MY TOOLKIT</h5>
+            <div class="toolkit-item">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="toolkit-item-name">Adobe Premiere Pro</span>
+              <span class="toolkit-item-desc">Video editing &amp; production</span>
+            </div>
+            <div class="toolkit-item">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="toolkit-item-name">After Effects</span>
+              <span class="toolkit-item-desc">Motion graphics &amp; VFX</span>
+            </div>
+            <div class="toolkit-item">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="toolkit-item-name">CapCut Pro</span>
+              <span class="toolkit-item-desc">Fast-paced social content</span>
+            </div>
+            <div class="toolkit-item">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="toolkit-item-name">Photoshop / Illustrator</span>
+              <span class="toolkit-item-desc">Asset creation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT SECTION ============ -->
+  <section class="contact" id="contact">
+    <div class="contact-content">
+      <span class="label section-label">07 — Contact</span>
+      <h2 class="h1 contact-headline">LET'S TALK</h2>
+      <p class="h4 contact-subtitle">Ready to create scroll-stopping video ads?</p>
+
+      <div class="contact-email" id="contactEmail">
+        <span class="contact-email-text">hello@cinetica.co</span>
+        <svg class="contact-email-icon" id="copyIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        <svg class="contact-email-icon" id="checkIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;color:var(--violet)">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <span class="contact-copied" id="copiedTooltip">Copied!</span>
+      </div>
+
+      <div class="contact-socials">
+        <a href="#" class="contact-social" onclick="event.preventDefault(); alert('LinkedIn profile coming soon!');">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <span class="nav-label">LinkedIn</span>
+        </a>
+        <a href="mailto:hello@cinetica.co" class="contact-social">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span class="nav-label">Email</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-footer">
+      <span class="contact-footer-copy" id="footerYear"></span>
+      <span class="contact-footer-top nav-label" id="backToTop">BACK TO TOP</span>
+    </div>
+  </section>
+
+  <!-- ============ PROJECT OVERLAY ============ -->
+  <div class="project-overlay" id="projectOverlay">
+    <button class="project-overlay-close" id="overlayClose">
+      <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="project-overlay-content">
+      <div class="project-overlay-video">
+        <img id="overlayImage" src="" alt="">
+      </div>
+      <h3 class="h3 project-overlay-title" id="overlayTitle">Project Title</h3>
+      <p class="body-lg project-overlay-desc" id="overlayDesc">Project description goes here.</p>
+      <div class="project-overlay-metrics" id="overlayMetrics"></div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+  (function() {
+    'use strict';
+
+    // ============================================
+    // DATA
+    // ============================================
+    const projects = [
+      { name: 'GlowSkin — E-commerce Ad', desc: 'High-converting TikTok ad for a skincare brand featuring fast-paced editing, trending audio sync, and dynamic text animations. The campaign achieved 3.2M views and a 4.5% CTR, significantly outperforming industry benchmarks.', image: 'assets/project-glowskin.jpg', metrics: [{ value: '3.2M', label: 'Views' }, { value: '4.5%', label: 'CTR' }, { value: '2.1x', label: 'ROAS' }] },
+      { name: 'TaskFlow — SaaS Demo', desc: 'Engaging product demo video for a productivity app with clean motion graphics, screen recordings, and clear value proposition. The video helped increase sign-up rates by 40% during the product launch phase.', image: 'assets/project-taskflow.jpg', metrics: [{ value: '1.8M', label: 'Views' }, { value: '12%', label: 'Sign-up Rate' }, { value: '40%', label: 'Conversion Lift' }] },
+      { name: 'FitPro — UGC Style Ad', desc: 'Authentic user-generated content style ad for a fitness brand with raw footage editing, quick cuts, and energetic pacing. The campaign generated the highest hook rates the brand had ever seen.', image: 'assets/project-fitpro.jpg', metrics: [{ value: '5.1M', label: 'Views' }, { value: '8.2%', label: 'Engagement' }, { value: '67%', label: 'Hook Rate' }] },
+      { name: 'CryptoVault — App Promo', desc: 'Sleek promotional video for a crypto wallet app with futuristic visuals, smooth transitions, and tech-inspired motion design. The ad resonated strongly with the tech-savvy target audience.', image: 'assets/project-cryptovault.jpg', metrics: [{ value: '2.4M', label: 'Views' }, { value: '6.1%', label: 'CTR' }, { value: '3.2x', label: 'ROAS' }] },
+      { name: 'Bloom — Brand Awareness', desc: 'Cinematic brand film for a luxury floral subscription service with elegant slow-motion footage and emotional storytelling. The film achieved a 15% share rate, far exceeding typical brand content performance.', image: 'assets/project-bloom.jpg', metrics: [{ value: '890K', label: 'Views' }, { value: '15%', label: 'Share Rate' }, { value: '5.3%', label: 'Engagement' }] },
+      { name: 'ShopFast — DTC Campaign', desc: 'Direct-response video ad series for an e-commerce fashion brand optimized for high ROAS with strong hooks and CTAs. The campaign consistently delivered above-target returns across all ad sets.', image: 'assets/project-shopfast.jpg', metrics: [{ value: '4.1M', label: 'Views' }, { value: '5.8%', label: 'CTR' }, { value: '4.5x', label: 'ROAS' }] }
+    ];
+
+    const caseStudies = projects.slice(0, 5);
+
+    // ============================================
+    // LENIS SMOOTH SCROLL
+    // ============================================
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => 1 - Math.pow(1 - t, 4),
+      smoothWheel: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Connect Lenis to GSAP ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"], [data-scroll]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) lenis.scrollTo(target, { offset: 0 });
+      });
+    });
+
+    // ============================================
+    // HEADER SCROLL EFFECT
+    // ============================================
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // ============================================
+    // NAVIGATION ACTIVE STATE
+    // ============================================
+    const sections = ['hero', 'projects', 'expertise', 'case-studies', 'testimonials', 'about', 'contact'];
+    const sidebarItems = document.querySelectorAll('.sidebar-nav-item');
+    const mobileItems = document.querySelectorAll('.mobile-nav-item');
+
+    sections.forEach((id, index) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => setActiveNav(index),
+        onEnterBack: () => setActiveNav(index),
+      });
+    });
+
+    function setActiveNav(index) {
+      sidebarItems.forEach((item, i) => item.classList.toggle('active', i === index));
+      mobileItems.forEach((item, i) => item.classList.toggle('active', i === index));
+    }
+
+    // Nav click handlers
+    document.querySelectorAll('.sidebar-nav-item, .mobile-nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const sectionId = item.dataset.section;
+        const target = document.getElementById(sectionId);
+        if (target) lenis.scrollTo(target, { offset: 0 });
+      });
+    });
+
+    // ============================================
+    // HERO ENTRANCE ANIMATION
+    // ============================================
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    heroTl
+      .from('.hero-label', { opacity: 0, duration: 0.6 })
+      .from('.hero-headline .line', { 
+        opacity: 0, y: 40, filter: 'blur(16px)', 
+        duration: 1, stagger: 0.15 
+      }, '-=0.3')
+      .from('.hero-subtitle', { opacity: 0, duration: 0.8 }, '-=0.5')
+      .from('.hero-desc', { opacity: 0, duration: 0.8 }, '-=0.5')
+      .from('.hero-cta', { opacity: 0, scale: 0.9, duration: 0.6, ease: 'back.out(1.7)' }, '-=0.4')
+      .from('.scroll-indicator', { opacity: 0, duration: 0.5 }, '-=0.2');
+
+    // ============================================
+    // BLUR REVEAL ANIMATIONS (reusable)
+    // ============================================
+    function blurReveal(selector, options = {}) {
+      const { stagger = 0.12, start = 'top 85%', y = 30, blur = 12 } = options;
+      gsap.utils.toArray(selector).forEach(el => {
+        gsap.from(el, {
+          opacity: 0,
+          y: y,
+          filter: `blur(${blur}px)`,
+          duration: 0.8,
+          ease: 'power3.out',
+          stagger: stagger,
+          scrollTrigger: { trigger: el, start: start, toggleActions: 'play none none none' }
+        });
+      });
+    }
+
+    // Apply blur reveals
+    blurReveal('.projects-sidebar-inner > *', { stagger: 0.12, start: 'top 80%' });
+    blurReveal('.project-card', { stagger: 0, start: 'top 85%', y: 60, blur: 8 });
+    blurReveal('.expertise-header > *', { stagger: 0.12, start: 'top 85%' });
+    blurReveal('.expertise-mobile-item', { stagger: 0.08, start: 'top 90%' });
+    blurReveal('.case-studies-header > *', { stagger: 0.12, start: 'top 85%' });
+    blurReveal('.testimonials-header > *', { stagger: 0.12, start: 'top 85%' });
+    blurReveal('.testimonial-card', { stagger: 0.15, start: 'top 85%', y: 40, blur: 10 });
+    blurReveal('.about-photo', { stagger: 0, start: 'top 80%', y: 0, blur: 8 });
+    blurReveal('.about-content > *', { stagger: 0.12, start: 'top 85%' });
+    blurReveal('.contact-content > *', { stagger: 0.12, start: 'top 85%', y: 30, blur: 12 });
+
+    // Contact headline with extra drama
+    gsap.from('.contact-headline', {
+      opacity: 0, y: 60, filter: 'blur(20px)',
+      duration: 1.2, ease: 'power3.out',
+      scrollTrigger: { trigger: '.contact-headline', start: 'top 85%', toggleActions: 'play none none none' }
+    });
+
+    // ============================================
+    // EXPERTISE HORIZONTAL SCROLL (Desktop)
+    // ============================================
+    if (window.innerWidth >= 1024) {
+      const expertiseScroll = document.getElementById('expertiseScroll');
+      const expertiseWrapper = document.getElementById('expertiseWrapper');
+      if (expertiseScroll && expertiseWrapper) {
+        const scrollWidth = expertiseScroll.scrollWidth - expertiseWrapper.offsetWidth;
+        gsap.to(expertiseScroll, {
+          x: -scrollWidth,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.expertise-card',
+            start: 'top 20%',
+            end: () => `+=${scrollWidth}`,
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+          }
+        });
+      }
+    }
+
+    // ============================================
+    // CASE STUDIES HORIZONTAL SCROLL + 3D FOCUS
+    // ============================================
+    if (window.innerWidth >= 1024) {
+      const caseScroll = document.getElementById('caseStudiesScroll');
+      const caseWrapper = document.getElementById('caseStudiesWrapper');
+      const paginationDots = document.querySelectorAll('.pagination-dot');
+
+      if (caseScroll && caseWrapper) {
+        const cards = caseScroll.querySelectorAll('.case-card');
+        const cardWidth = cards[0]?.offsetWidth + 40 || 0; // includes gap
+        const scrollWidth = caseScroll.scrollWidth - window.innerWidth + 160;
+
+        // Horizontal scroll
+        const caseST = ScrollTrigger.create({
+          trigger: '.case-studies',
+          start: 'top top',
+          end: () => `+=${scrollWidth}`,
+          pin: true,
+          scrub: 1,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            gsap.set(caseScroll, { x: -scrollWidth * progress });
+
+            // 3D Focus Effect
+            const viewportCenter = window.innerWidth / 2;
+            cards.forEach((card, i) => {
+              const rect = card.getBoundingClientRect();
+              const cardCenter = rect.left + rect.width / 2;
+              const dist = Math.abs(cardCenter - viewportCenter) / window.innerWidth;
+              const clampedDist = Math.min(dist, 1);
+
+              const scale = 1 - clampedDist * 0.3;
+              const blur = clampedDist * 8;
+              const rotateY = (cardCenter < viewportCenter ? -1 : 1) * clampedDist * 15;
+              const opacity = 1 - clampedDist * 0.5;
+
+              gsap.set(card, {
+                scale: scale,
+                filter: `blur(${blur}px)`,
+                rotateY: rotateY,
+                opacity: opacity,
+                transformPerspective: 1200,
+              });
+            });
+
+            // Update pagination
+            const activeIndex = Math.min(Math.floor(progress * cards.length), cards.length - 1);
+            paginationDots.forEach((dot, i) => dot.classList.toggle('active', i === activeIndex));
+          }
+        });
+
+        // Pagination click
+        paginationDots.forEach((dot, i) => {
+          dot.addEventListener('click', () => {
+            const targetProgress = i / (cards.length - 1);
+            const targetScroll = caseST.start + (caseST.end - caseST.start) * targetProgress;
+            lenis.scrollTo(targetScroll, { duration: 0.8 });
+          });
+        });
+      }
+    }
+
+    // ============================================
+    // PROJECT OVERLAY
+    // ============================================
+    const overlay = document.getElementById('projectOverlay');
+    const overlayClose = document.getElementById('overlayClose');
+    const overlayImage = document.getElementById('overlayImage');
+    const overlayTitle = document.getElementById('overlayTitle');
+    const overlayDesc = document.getElementById('overlayDesc');
+    const overlayMetrics = document.getElementById('overlayMetrics');
+
+    function openOverlay(project) {
+      overlayImage.src = project.image;
+      overlayImage.alt = project.name;
+      overlayTitle.textContent = project.name;
+      overlayDesc.textContent = project.desc;
+      overlayMetrics.innerHTML = project.metrics.map(m => 
+        `<div class="project-overlay-metric">
+          <div class="project-overlay-metric-value">${m.value}</div>
+          <div class="project-overlay-metric-label">${m.label}</div>
+        </div>`
+      ).join('');
+      overlay.classList.add('active');
+      lenis.stop();
+    }
+
+    function closeOverlay() {
+      overlay.classList.remove('active');
+      lenis.start();
+    }
+
+    // Project cards
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.project);
+        if (projects[idx]) openOverlay(projects[idx]);
+      });
+    });
+
+    // Case study cards
+    document.querySelectorAll('.case-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.case);
+        if (caseStudies[idx]) openOverlay(caseStudies[idx]);
+      });
+    });
+
+    overlayClose.addEventListener('click', closeOverlay);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOverlay(); });
+
+    // ============================================
+    // EMAIL COPY
+    // ============================================
+    const contactEmail = document.getElementById('contactEmail');
+    const copyIcon = document.getElementById('copyIcon');
+    const checkIcon = document.getElementById('checkIcon');
+    const copiedTooltip = document.getElementById('copiedTooltip');
+
+    contactEmail.addEventListener('click', () => {
+      navigator.clipboard.writeText('hello@cinetica.co').then(() => {
+        copyIcon.style.display = 'none';
+        checkIcon.style.display = 'block';
+        copiedTooltip.classList.add('show');
+        setTimeout(() => {
+          copyIcon.style.display = 'block';
+          checkIcon.style.display = 'none';
+          copiedTooltip.classList.remove('show');
+        }, 2000);
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = 'hello@cinetica.co';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        copyIcon.style.display = 'none';
+        checkIcon.style.display = 'block';
+        copiedTooltip.classList.add('show');
+        setTimeout(() => {
+          copyIcon.style.display = 'block';
+          checkIcon.style.display = 'none';
+          copiedTooltip.classList.remove('show');
+        }, 2000);
+      });
+    });
+
+    // ============================================
+    // BACK TO TOP
+    // ============================================
+    document.getElementById('backToTop').addEventListener('click', () => {
+      lenis.scrollTo(0, { duration: 1.2 });
+    });
+
+    // ============================================
+    // FOOTER YEAR
+    // ============================================
+    document.getElementById('footerYear').textContent = new Date().getFullYear() + ' Cinetica. All rights reserved.';
+
+    // ============================================
+    // MOBILE CASE STUDIES CLICK HANDLERS
+    // ============================================
+    document.querySelectorAll('.case-studies-mobile .project-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.case);
+        if (caseStudies[idx]) openOverlay(caseStudies[idx]);
+      });
+    });
+
+  })();
+  </script>
+
 </body>
 </html>
